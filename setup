@@ -1,0 +1,59 @@
+#!/bin/bash
+
+install_dir=$(pwd)
+script_dir="$( cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+echo -n "Installing dotfiles from $script_dir to $install_dir. Enter y to proceed: "
+
+read -r answer
+[ ! "$answer" = "y" ] && exit 1
+
+function create_unless_exists() {
+  [ ! -e "$1" ] && echo "$2" > "$1"
+}
+
+function symlink_unless_exists() {
+  [ ! -e "$1" ] && ln -s "$2" "$1"
+}
+
+mkdir -p "$install_dir/tmp"
+mkdir -p "$install_dir/bin"
+mkdir -p "$install_dir/.config"
+mkdir -p "$install_dir/.cache"
+
+create_unless_exists "$install_dir/.zshrc" "source $script_dir/zsh/main.zsh"
+create_unless_exists "$install_dir/.tmux.conf" "source-file $script_dir/tmux/main.conf"
+symlink_unless_exists "$install_dir/.config/nvim" "$script_dir/nvim"
+
+read -r -d '' console_text << EOF
+#!/usr/bin/env ruby
+
+require_relative '${script_dir}/console_env'
+
+start_console(binding)
+
+EOF
+
+create_unless_exists "$install_dir/bin/console" "$console_text"
+chmod +x "$install_dir/bin/console"
+
+read -r -d '' gemrc_text << EOF
+---
+:backtrace: false
+:sources:
+- https://rubygems.org/
+:update_sources: true
+:verbose: true
+
+gem: --env-shebang
+EOF
+
+create_unless_exists "$install_dir/.gemrc" "$gemrc_text"
+
+if [ "$(uname)" == "Darwin" ]; then
+  symlink_unless_exists "$install_dir/.hammerspoon" "$script_dir/hammerspoon"
+
+  touch "$install_dir/.hushlogin"
+fi
+
+exit 0
