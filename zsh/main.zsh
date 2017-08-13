@@ -36,7 +36,6 @@ source ${0:h}/lib/helpers.zsh
 
 # chruby
 source /usr/local/opt/chruby/share/chruby/chruby.sh
-chruby ruby-2.3.1
 
 # nvm
 export NVM_DIR=~/.nvm
