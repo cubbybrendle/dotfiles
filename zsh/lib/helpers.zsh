@@ -19,7 +19,7 @@ alias la="ll -A"
 unset colorflag
 
 # git
-alias gc="git checkout"
+alias gco="git checkout"
 alias ga="git add"
 alias gs="git status"
 
