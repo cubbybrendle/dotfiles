@@ -3,13 +3,18 @@
 require 'json'
 require 'cgi'
 require 'uri'
+require 'stringio'
 
 require 'oj'
 require 'rest-client'
 require 'mechanize'
 require 'nokogiri'
 require 'redis'
+
+# Swallow up some warnings printed during pry load
+orig_stderr, $stderr = $stderr, StringIO.new
 require 'pry'
+$stderr = orig_stderr
 
 $log = Logger.new(STDOUT)
 RestClient.log = $log
