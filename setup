@@ -50,6 +50,14 @@ EOF
 
 create_unless_exists "$install_dir/.gemrc" "$gemrc_text"
 
+read -r -d '' bundle_config_text << EOF
+---
+BUNDLE_CONSOLE: "pry"
+EOF
+
+mkdir -p "$install_dir/.bundle"
+create_unless_exists "$install_dir/.bundle/config" "$bundle_config_text"
+
 if [ "$(uname)" == "Darwin" ]; then
   symlink_unless_exists "$install_dir/.hammerspoon" "$script_dir/hammerspoon"
 
