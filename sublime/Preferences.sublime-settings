@@ -1,0 +1,21 @@
+{
+	"color_scheme": "Packages/gruvbox/gruvbox (Dark) (Medium).sublime-color-scheme",
+	"comment.line.annotation.git_gutter":
+	{
+	},
+	"font_face": "Inconsolata",
+	"font_size": 15,
+	"gruvbox_panel_xs": true,
+	"gruvbox_statusbar_xxs": true,
+	"gruvbox_tabs_xxs": true,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"rulers":
+	[
+		120
+	],
+	"theme": "gruvbox.sublime-theme",
+	"translate_tabs_to_spaces": true
+}

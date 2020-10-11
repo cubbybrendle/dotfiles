@@ -61,6 +61,9 @@ create_unless_exists "$install_dir/.bundle/config" "$bundle_config_text"
 if [ "$(uname)" == "Darwin" ]; then
   symlink_unless_exists "$install_dir/.hammerspoon" "$script_dir/hammerspoon"
 
+  mkdir -p "$install_dir/Library/Application Support/Sublime Text 3/Packages"
+  symlink_unless_exists "$install_dir/Library/Application Support/Sublime Text 3/Packages/User" "$script_dir/sublime"
+
   touch "$install_dir/.hushlogin"
 fi
 
