@@ -32,18 +32,22 @@ end
 
 local mobileLayout = {
   {"Google Chrome", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"Sublime Text",  nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"Evernote",      nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"Slack",         nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"iTerm2",        nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Firefox", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"FirefoxDeveloperEdition", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Sublime Text", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Evernote", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Slack", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"iTerm", nil, mbpScreen, hs.layout.maximized, nil, nil},
 }
 
 local deskLayout = {
-  {"Google Chrome", nil, mbpScreen,       hs.layout.maximized, nil, nil},
-  {"Sublime Text",  nil, leftDeskScreen,  hs.layout.left50,    nil, nil},
-  {"Evernote",      nil, rightDeskScreen, hs.layout.right50,   nil, nil},
-  {"Slack",         nil, rightDeskScreen, hs.layout.right50,   nil, nil},
-  {"iTerm2",        nil, rightDeskScreen, hs.layout.left50,    nil, nil},
+  {"Google Chrome", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Firefox", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"FirefoxDeveloperEdition", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Sublime Text", nil, leftDeskScreen,  hs.layout.left50, nil, nil},
+  {"Evernote", nil, rightDeskScreen, hs.layout.right50, nil, nil},
+  {"Slack", nil, rightDeskScreen, hs.layout.right50, nil, nil},
+  {"iTerm", nil, rightDeskScreen, hs.layout.left50, nil, nil},
 }
 
 -- Watchers

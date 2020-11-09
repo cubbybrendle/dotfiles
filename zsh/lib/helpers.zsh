@@ -31,11 +31,19 @@ alias hists='hist --numstat'
 alias st="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias stt="st ./"
 
-# misc
+# local server for static files
 function server() {
   local port="${1:-8000}"
   ruby -run -ehttpd . -p "${port}"
 }
 
-alias ruby19="chruby ruby-1.9.3-p551"
-alias ruby22="chruby ruby-2.2.4"
+# shout out to ruby-install
+function node-install() {
+    node-build "$1" "$HOME/.nodes/node-$1"
+}
+
+# Open zoom meeting without opening a browser tab.
+# Takes string parameter with format "confno=XXXXXXX&pwd=YYYYYYYYY"
+funtion _zoommtg() {
+  open "zoommtg://zoom.us/join?$1"
+}

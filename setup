@@ -21,9 +21,13 @@ mkdir -p "$install_dir/bin"
 mkdir -p "$install_dir/.config"
 mkdir -p "$install_dir/.cache"
 
+create_unless_exists "$install_dir/.zshenv" "source $script_dir/zsh/zshenv.zsh"
 create_unless_exists "$install_dir/.zshrc" "source $script_dir/zsh/main.zsh"
 create_unless_exists "$install_dir/.tmux.conf" "source-file $script_dir/tmux/main.conf"
 symlink_unless_exists "$install_dir/.config/nvim" "$script_dir/nvim"
+
+create_unless_exists "$install_dir/.node-version" "12.18.3"
+create_unless_exists "$install_dir/.ruby-version" "2.7.1"
 
 read -r -d '' console_text << EOF
 #!/usr/bin/env ruby
@@ -45,7 +49,7 @@ read -r -d '' gemrc_text << EOF
 :update_sources: true
 :verbose: true
 
-gem: --env-shebang
+gem: --env-shebang --no-document
 EOF
 
 create_unless_exists "$install_dir/.gemrc" "$gemrc_text"
@@ -57,6 +61,8 @@ EOF
 
 mkdir -p "$install_dir/.bundle"
 create_unless_exists "$install_dir/.bundle/config" "$bundle_config_text"
+
+symlink_unless_exists "$install_dir/bin/bundle_shim" "$script_dir/bin/bundle_shim"
 
 if [ "$(uname)" == "Darwin" ]; then
   symlink_unless_exists "$install_dir/.hammerspoon" "$script_dir/hammerspoon"

@@ -11,3 +11,11 @@ setopt xtrace prompt_subst # turn on tracing and expansion of commands
 
 unsetopt xtrace
 exec 2>&3 3>&- # restore stderr to the value saved in FD 3
+
+
+# also helpful is zprof
+# put this line where you want to start (perhaps top of .zshenv)
+zmodload zsh/zprof
+
+# then run the following once the shell has loaded
+zprof

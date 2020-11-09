@@ -23,30 +23,22 @@
 
 autoload -U colors && colors
 
-# Apply theming defaults
-PS1="%n@%m:%~%# "
-
 # Outputs current branch info in prompt format
 function git_prompt_info() {
   local ref
   ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "%{$fg_bold[blue]%}(%{$fg[red]%}${ref#refs/heads/}$(parse_git_dirty)%{$reset_color%}"
 }
 
 # Checks if working tree is dirty
 function parse_git_dirty() {
   if [[ -n "$(command git status --porcelain --ignore-submodules=dirty 2> /dev/null | tail -n1)" ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+    echo "%{$fg[blue]%}) %{$fg[yellow]%}✗"
   else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+    echo "%{$fg[blue]%})"
   fi
 }
 
 local ret_status="%(?:%{$fg[green]%}❯:%{$fg[red]%}❯)"
 PROMPT='${ret_status} %{$fg_bold[cyan]%}%c%{$reset_color%}$(git_prompt_info) '
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"

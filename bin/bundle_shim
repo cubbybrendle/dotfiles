@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# Used with vscode solargraph plugin to ensure the proper ruby is being used.
+
+chruby_auto
+
+bundle "$@"

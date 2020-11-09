@@ -6,7 +6,7 @@ require 'uri'
 require 'stringio'
 
 require 'oj'
-require 'rest-client'
+require 'http'
 require 'mechanize'
 require 'nokogiri'
 require 'redis'
@@ -17,7 +17,9 @@ require 'pry'
 $stderr = orig_stderr
 
 $log = Logger.new(STDOUT)
-RestClient.log = $log
+$log.level = :info
+
+$http = HTTP.use(logging: { logger: $log })
 
 # File
 
@@ -57,6 +59,10 @@ end
 # Pry
 
 def start_console(b)
-  Pry.config.prompt = [proc{' > '}, proc{' * '}]
+  Pry.config.prompt = Pry::Prompt.new(
+    'custom',
+    'custom',
+    [proc {' > '}, proc {' * '}]
+  )
   b.pry(:quiet => true)
 end

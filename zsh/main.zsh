@@ -1,5 +1,3 @@
-autoload -U compinit
-
 # History
 
 HISTFILE=$HOME/.zsh_history
@@ -34,16 +32,19 @@ source ${0:h}/lib/termsupport.zsh
 source ${0:h}/lib/theme.zsh
 source ${0:h}/lib/helpers.zsh
 
-# chruby
-source /usr/local/opt/chruby/share/chruby/chruby.sh
+# fzf
+[[ \$- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.zsh" 2> /dev/null
+source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+export FZF_DEFAULT_COMMAND="fd . $HOME"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 
-# nvm
-export NVM_DIR=~/.nvm
-nvm() {
-  [ -s $NVM_DIR/nvm.sh ] && . $NVM_DIR/nvm.sh
-  nvm $@
-}
+autoload -Uz compinit
 
-export PATH="/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH"
+dump=$HOME/.zcompdump
+if [[ -s "$dump" && (! -s "$dump.zwc" || "$dump" -nt "$dump.zwc" ) ]]; then
+  zcompile "$dump"
+fi
+unset dump
 
-compinit
+compinit -C
