@@ -1,4 +1,4 @@
-tap "caskroom/fonts"
+tap "homebrew/cask-fonts"
 cask "font-inconsolata"
 
 brew "awscli"
