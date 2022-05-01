@@ -1,20 +1,26 @@
 # Environment with utility methods for multipurpose ruby console
 
-require 'json'
 require 'cgi'
-require 'uri'
+require 'csv'
+require 'json'
 require 'stringio'
+require 'uri'
 
-require 'oj'
-require 'http'
-require 'mechanize'
-require 'nokogiri'
-require 'redis'
+Proc.new do
+  gems = %w[http mechanize nokogiri oj pry redis]
+  begin
+    gems.each { |g| require(g) }
+  rescue LoadError
+    puts 'Missing required gems. Install? (y/n)'
+    answer = gets.chomp
 
-# Swallow up some warnings printed during pry load
-orig_stderr, $stderr = $stderr, StringIO.new
-require 'pry'
-$stderr = orig_stderr
+    exit(1) if answer.strip != 'y'
+
+    gems.each { |g| Gem.install(g) }
+    Gem.clear_paths
+    gems.each { |g| require(g) }
+  end
+end.call
 
 $log = Logger.new(STDOUT)
 $log.level = :info
