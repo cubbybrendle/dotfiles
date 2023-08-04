@@ -30,6 +30,7 @@ source ${0:h}/lib/completion.zsh
 source ${0:h}/lib/keybindings.zsh
 source ${0:h}/lib/termsupport.zsh
 source ${0:h}/lib/theme.zsh
+source ${0:h}/lib/venv.zsh
 source ${0:h}/lib/helpers.zsh
 
 # fzf
