@@ -1,3 +1,5 @@
+-- local log = hs.logger.new('init', 'debug')
+
 -- Settings
 
 hs.window.animationDuration = 0
@@ -35,7 +37,7 @@ local mobileLayout = {
   {"Firefox", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"FirefoxDeveloperEdition", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Sublime Text", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"Evernote", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Joplin", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Slack", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"iTerm", nil, mbpScreen, hs.layout.maximized, nil, nil},
 }
@@ -45,7 +47,7 @@ local deskLayout = {
   {"Firefox", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"FirefoxDeveloperEdition", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Sublime Text", nil, leftDeskScreen,  hs.layout.left50, nil, nil},
-  {"Evernote", nil, rightDeskScreen, hs.layout.right50, nil, nil},
+  {"Joplin", nil, rightDeskScreen, hs.layout.right50, nil, nil},
   {"Slack", nil, rightDeskScreen, hs.layout.right50, nil, nil},
   {"iTerm", nil, rightDeskScreen, hs.layout.left50, nil, nil},
 }
@@ -67,8 +69,9 @@ hs.screen.watcher.new(function()
 
 hs.hotkey.bind(mash, "left", function()
     local win = hs.window.focusedWindow()
-    if isLeft(win) and westWindow(win) then
-      rightSide(win, westFrame(win))
+    local ws = westScreen(win)
+    if isLeft(win) and ws then
+      rightSide(win, ws)
     else
       leftSide(win)
     end
@@ -77,8 +80,9 @@ hs.hotkey.bind(mash, "left", function()
 
 hs.hotkey.bind(mash, "right", function()
     local win = hs.window.focusedWindow()
-    if isRight(win) and eastWindow(win) then
-      leftSide(win, eastFrame(win))
+    local es = eastScreen(win)
+    if isRight(win) and es then
+      leftSide(win, es)
     else
       rightSide(win)
     end
@@ -87,26 +91,18 @@ hs.hotkey.bind(mash, "right", function()
 
 hs.hotkey.bind(supermash, "left", function()
     local win = hs.window.focusedWindow()
-    if westWindow(win) then
-      local wf = westFrame(win)
-      if isFull(win) then
-        fullscreen(win, wf)
-      else
-        rightSide(win, wf)
-      end
+    local ws = westScreen(win)
+    if ws then
+      fullscreen(win, ws)
     end
   end
 )
 
 hs.hotkey.bind(supermash, "right", function()
     local win = hs.window.focusedWindow()
-    if eastWindow(win) then
-      local ef = eastFrame(win)
-      if isFull(win) then
-        fullscreen(win, ef)
-      else
-        leftSide(win, ef)
-      end
+    local es = eastScreen(win)
+    if es then
+      fullscreen(win, es)
     end
   end
 )
@@ -127,29 +123,35 @@ end
 -- Functions
 
 -- push win to left half of frame
-function leftSide(win, frame)
-  if not frame then
-    frame = win:screen():frame()
+function leftSide(win, screen)
+  if not screen then
+    screen = win:screen()
   end
+  local frame = screen:frame()
   frame.w = frame.w/2
+  win:setFrame(frame)
   win:setFrame(frame)
 end
 
 -- push win to right half of frame
-function rightSide(win, frame)
-  if not frame then
-    frame = win:screen():frame()
+function rightSide(win, screen)
+  if not screen then
+    screen = win:screen()
   end
+  local frame = screen:frame()
   frame.x = frame.x + frame.w/2
   frame.w = frame.w/2
+  win:setFrame(frame)
   win:setFrame(frame)
 end
 
 -- make win fullscreen in frame
-function fullscreen(win, frame)
-  if not frame then
-    frame = win:screen():frame()
+function fullscreen(win, screen)
+  if not screen then
+    screen = win:screen()
   end
+  local frame = screen:frame()
+  win:setFrame(frame)
   win:setFrame(frame)
 end
 
@@ -180,18 +182,10 @@ function isFull(win)
   end
 end
 
-function westWindow(win)
+function westScreen(win)
   return win:screen():toWest()
 end
 
-function eastWindow(win)
+function eastScreen(win)
   return win:screen():toEast()
-end
-
-function westFrame(win)
-  return westWindow(win):frame()
-end
-
-function eastFrame(win)
-  return eastWindow(win):frame()
 end
