@@ -1,4 +1,4 @@
-source /usr/local/opt/chruby/share/chruby/chruby.sh
+source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
 
 unset RUBY_AUTO_VERSION
 
@@ -52,6 +52,9 @@ function chnode_auto() {
   fi
 }
 
+source ${0:h}/lib/chpython.zsh
+
 preexec_functions+=("chruby_auto" "chnode_auto")
 
-export PATH="/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH"
+# export PATH="/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH"
+# eval $(/opt/homebrew/bin/brew shellenv)
