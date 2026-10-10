@@ -27,10 +27,6 @@ alias hist='git log --pretty=format:"%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn] %
 alias histg='hist --graph'
 alias hists='hist --numstat'
 
-# sublime
-alias st="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-alias stt="st ./"
-
 # local server for static files
 function server() {
   local port="${1:-8000}"

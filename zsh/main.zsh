@@ -30,11 +30,9 @@ source ${0:h}/lib/completion.zsh
 source ${0:h}/lib/keybindings.zsh
 source ${0:h}/lib/termsupport.zsh
 source ${0:h}/lib/theme.zsh
-source ${0:h}/lib/venv.zsh
 source ${0:h}/lib/helpers.zsh
 
 # fzf
-# [[ \$- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.zsh" 2> /dev/null
 [[ \$- == *i* ]] && source "/opt/homebrew/opt/fzf/shell/completion.zsh" 2> /dev/null
 source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
 export FZF_DEFAULT_COMMAND="fd . $HOME"

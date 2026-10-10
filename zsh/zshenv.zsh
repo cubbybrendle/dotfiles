@@ -52,8 +52,6 @@ function chnode_auto() {
   fi
 }
 
-source ${0:h}/lib/chpython.zsh
-
 preexec_functions+=("chruby_auto" "chnode_auto")
 
 # export PATH="/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH"

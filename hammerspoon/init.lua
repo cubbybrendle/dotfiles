@@ -1,5 +1,7 @@
 -- local log = hs.logger.new('init', 'debug')
 
+App = {}
+
 -- Settings
 
 hs.window.animationDuration = 0
@@ -12,49 +14,56 @@ local supermash = {"cmd", "alt", "ctrl"}
 -- Mappings of keys to Applications names
 
 local app_keys = {
-  b = "Google Chrome";
-  t = "iTerm2";
-  e = "Sublime Text";
+  b = "Firefox";
+  t = "Ghostty";
+  e = "Code";
   s = "Slack";
-  p = "Postman";
   f = "Finder";
 }
 
 -- Layouts
 
-local mbpScreen = "Color LCD"
+local mbpScreen = hs.screen.mainScreen():name()
+
+local ok, config = pcall(require, "config")
+local screenIds = {}
+if ok and type(config) == "table" and type(config.screens) == "table" then
+  screenIds = config.screens
+else
+  hs.printf("ERROR: could not load config.lua, falling back to screen order: %s", tostring(config))
+end
+
+local deskScreen = function(id, index)
+  return (id and hs.screen.find(id)) or hs.screen.allScreens()[index]
+end
 
 local leftDeskScreen = function()
-  return hs.screen.allScreens()[2]
+  return deskScreen(screenIds.left, 2)
 end
 
 local rightDeskScreen = function()
-  return hs.screen.allScreens()[3]
+  return deskScreen(screenIds.right, 3)
 end
 
 local mobileLayout = {
-  {"Google Chrome", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Firefox", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"FirefoxDeveloperEdition", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"Sublime Text", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Code", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Joplin", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Slack", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"iTerm", nil, mbpScreen, hs.layout.maximized, nil, nil},
+  {"Ghostty", nil, mbpScreen, hs.layout.maximized, nil, nil},
 }
 
 local deskLayout = {
-  {"Google Chrome", nil, mbpScreen, hs.layout.maximized, nil, nil},
   {"Firefox", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"FirefoxDeveloperEdition", nil, mbpScreen, hs.layout.maximized, nil, nil},
-  {"Sublime Text", nil, leftDeskScreen,  hs.layout.left50, nil, nil},
+  {"Code", nil, leftDeskScreen,  hs.layout.maximized, nil, nil},
   {"Joplin", nil, rightDeskScreen, hs.layout.right50, nil, nil},
   {"Slack", nil, rightDeskScreen, hs.layout.right50, nil, nil},
-  {"iTerm", nil, rightDeskScreen, hs.layout.left50, nil, nil},
+  {"Ghostty", nil, rightDeskScreen, hs.layout.left50, nil, nil},
 }
 
 -- Watchers
 
-hs.screen.watcher.new(function()
+App.screenwatcher = hs.screen.watcher.new(function()
     local numScreens = #hs.screen.allScreens()
 
     if numScreens == 1 then
@@ -63,7 +72,8 @@ hs.screen.watcher.new(function()
       hs.layout.apply(deskLayout)
     end
   end
-):start()
+)
+App.screenwatcher:start()
 
 -- Bindings
 
@@ -189,3 +199,124 @@ end
 function eastScreen(win)
   return win:screen():toEast()
 end
+
+------------------------------------------------------------
+-- Handy dictation using Globe/Fn as push-to-talk
+--
+-- Fn down:
+--   Start Handy
+--
+-- Fn up:
+--   Stop Handy, unless another key was pressed while Fn was held
+--
+-- Fn + another key:
+--   Cancel Handy and let the other key behave normally
+------------------------------------------------------------
+
+-- local handyToggleShortcut = {
+--   modifiers = { "alt" },
+--   key = "space",
+-- }
+
+-- local handyCancelShortcut = {
+--   modifiers = {},
+--   key = "escape",
+-- }
+
+-- local fnHeld = false
+-- local fnUsedAsModifier = false
+-- local handyStartedByFn = false
+
+-- local function sendShortcut(shortcut)
+--   hs.eventtap.keyStroke(
+--     shortcut.modifiers,
+--     shortcut.key,
+--     0
+--   )
+-- end
+
+-- ------------------------------------------------------------
+-- -- Watch Fn/Globe state
+-- ------------------------------------------------------------
+
+-- App.fnWatcher = hs.eventtap.new(
+--   { hs.eventtap.event.types.flagsChanged },
+--   function(event)
+--     local flags = event:getFlags()
+--     local fnNowHeld = flags.fn == true
+
+--     -- Fn was just pressed
+--     if fnNowHeld and not fnHeld then
+--       fnHeld = true
+--       fnUsedAsModifier = false
+--       handyStartedByFn = false
+
+--       sendShortcut(handyToggleShortcut)
+--       handyStartedByFn = true
+
+--     -- Fn was just released
+--     elseif not fnNowHeld and fnHeld then
+--       fnHeld = false
+
+--       if handyStartedByFn and not fnUsedAsModifier then
+--         sendShortcut(handyToggleShortcut)
+--         handyStartedByFn = false
+--       end
+
+--       fnUsedAsModifier = false
+--     end
+
+--     -- Never consume the Fn event.
+--     return false
+--   end
+-- )
+
+-- ------------------------------------------------------------
+-- -- Detect another key while Fn is held
+-- ------------------------------------------------------------
+
+-- App.keyWatcher = hs.eventtap.new(
+--   {
+--     hs.eventtap.event.types.keyDown,
+--     hs.eventtap.event.types.systemDefined,
+--   },
+--   function(event)
+--     local eventType = event:getType()
+
+--     if not fnHeld or fnUsedAsModifier then
+--       return false
+--     end
+
+--     if eventType == hs.eventtap.event.types.keyDown then
+--       local keyCode = event:getKeyCode()
+--       local flags = event:getFlags()
+
+--       -- Ignore Handy's synthetic Option-Space shortcut.
+--       -- macOS keycode 49 = Space.
+--       if keyCode == 53 then
+--         return false
+--       end
+
+--       if keyCode == 179 then
+--         return false
+--       end
+
+--       if keyCode == 49 and flags.alt then
+--         return false
+--       end
+--     end
+
+--     fnUsedAsModifier = true
+
+--     if handyStartedByFn then
+--         sendShortcut(handyCancelShortcut)
+--         handyStartedByFn = false
+--     end
+
+--     -- Return false so the key still reaches macOS.
+--     return false
+--   end
+-- )
+
+-- App.fnWatcher:start()
+-- App.keyWatcher:start()
