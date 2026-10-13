@@ -26,6 +26,8 @@ create_unless_exists "$install_dir/.zshrc" "source $script_dir/zsh/main.zsh"
 create_unless_exists "$install_dir/.tmux.conf" "source-file $script_dir/tmux/main.conf"
 symlink_unless_exists "$install_dir/.config/nvim" "$script_dir/nvim"
 
+symlink_unless_exists "$install_dir/.config/ghostty" "$script_dir/ghostty"
+
 create_unless_exists "$install_dir/.node-version" "18.12.1"
 create_unless_exists "$install_dir/.ruby-version" "3.1.2"
 

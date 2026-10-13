@@ -28,15 +28,15 @@ function git_prompt_info() {
   local ref
   ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
-  echo "%{$fg_bold[blue]%}(%{$fg[red]%}${ref#refs/heads/}$(parse_git_dirty)%{$reset_color%}"
+  echo "%{$fg_bold[cyan]%}(%{$fg[red]%}${ref#refs/heads/}$(parse_git_dirty)%{$reset_color%}"
 }
 
 # Checks if working tree is dirty
 function parse_git_dirty() {
   if [[ -n "$(command git status --porcelain --ignore-submodules=dirty 2> /dev/null | tail -n1)" ]]; then
-    echo "%{$fg[blue]%}) %{$fg[yellow]%}✗"
+    echo "%{$fg[cyan]%}) %{$fg[yellow]%}✗"
   else
-    echo "%{$fg[blue]%})"
+    echo "%{$fg[cyan]%})"
   fi
 }
 
